@@ -1,21 +1,43 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.css';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+
+    setProjectFormAdd() {
+        console.log("Add!");
+    }
+
+    render() {
+        return (
+            <div>
+                <nav className="navbar navbar-default navbar-fixed-top">
+                    <div className="container">
+                        <a className="navbar-brand" href="#">React</a>
+                    </div>
+                </nav>
+                <div className="container">
+
+                    <div>
+                        <div className="col-sm-3">
+                            <br />
+                            <h3>
+                                <small><strong>PROJECTS</strong></small>
+                            </h3>
+                            {/*<Projects projects={this.state.projects} handleSelect={this.setSelectedProject} selected={this.state.selectedProjectId}>*/}
+                            <br />
+                            <button className="btn btn-default" onClick={this.setProjectFormAdd}>
+                                <span className="glyphicon glyphicon-plus" aria-hidden="true"></span> Add project
+                            </button>
+                        </div>
+                        <div className="col-sm-9">
+                            {/*{mainView}*/}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 }
 
 export default App;
