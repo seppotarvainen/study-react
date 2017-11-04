@@ -73,20 +73,11 @@ export default class ProjectForm extends Component {
 }
 
 class FormInput extends Component {
-    constructor(props) {
-        super(props);
-
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(event) {
-        this.props.handleChange(event);
-    }
 
     render() {
         let input = this.props.type === "text" ?
-            <input className="form-control" name={this.props.fieldName} type="text" value={this.props.value} onChange={this.handleChange}/> :
-            <textarea className="form-control" name={this.props.fieldName} type="text" value={this.props.value} onChange={this.handleChange}/>;
+            <input className="form-control" name={this.props.fieldName} type="text" value={this.props.value} onChange={this.props.handleChange}/> :
+            <textarea className="form-control" name={this.props.fieldName} type="text" value={this.props.value} onChange={this.props.handleChange}/>;
 
         return (
             <div className="form-group row">

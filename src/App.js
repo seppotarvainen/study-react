@@ -26,13 +26,10 @@ class App extends Component {
         this.deleteProject = this.deleteProject.bind(this);
         this.cancelProjectForm = this.cancelProjectForm.bind(this);
         this.submitProjectForm = this.submitProjectForm.bind(this);
-        // this.generateEmpyProject = this.generateEmpyProject.bind(this);
     }
 
     componentDidMount() {
-        // load projects
         this.projects = HttpCall.get(BaseURL.base, (projects) => {
-            console.log(projects);
             this.setState({
                 projects: projects
             });
@@ -44,7 +41,6 @@ class App extends Component {
      * @param project - Project object
      */
     setSelectedProject(project) {
-        console.log(project);
         this.setState({selectedProject: project});
     }
 
@@ -59,9 +55,7 @@ class App extends Component {
     }
 
     setProjectFormAdd() {
-        console.log(this.state.isFormView);
         let emptyProject = this.generateEmpyProject();
-        console.log(emptyProject);
         this.setState({
             isFormView: true,
             selectedProject: emptyProject
@@ -111,7 +105,6 @@ class App extends Component {
             let index = this.state.projects.findIndex(p => project.id === p.id);
             let allProjects = this.state.projects.slice();
             allProjects.splice(index, 1);
-            console.log(allProjects);
 
             this.setState({
                 selectedProject: null,
