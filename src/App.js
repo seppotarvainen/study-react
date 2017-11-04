@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
-import ProjectView from './project/ProjectView';
+import ProjectDetails from './project/ProjectDetails';
 import ProjectList from './project/ProjectList';
 import HttpCall from './utils/HttpCall';
 import BaseURL from './utils/BaseURL';
@@ -16,11 +16,17 @@ class App extends Component {
 
         this.state = {
             projects: [],
-            selectedProject: null
+            selectedProject: null,
+            isFormView: false
         };
 
         this.setSelectedProject = this.setSelectedProject.bind(this);
+        this.setProjectFormAdd = this.setProjectFormAdd.bind(this);
         this.updateProject = this.updateProject.bind(this);
+        this.deleteProject = this.deleteProject.bind(this);
+        this.cancelProjectForm = this.cancelProjectForm.bind(this);
+        this.submitProjectForm = this.submitProjectForm.bind(this);
+        // this.generateEmpyProject = this.generateEmpyProject.bind(this);
     }
 
     componentDidMount() {
@@ -42,8 +48,43 @@ class App extends Component {
         this.setState({selectedProject: project});
     }
 
+    generateEmpyProject() {
+        return {
+            "description": "",
+            "done": false,
+            "id": null,
+            "timeInSeconds": 0,
+            "title": ""
+        }
+    }
+
     setProjectFormAdd() {
-        console.log("Add!");
+        console.log(this.state.isFormView);
+        let emptyProject = this.generateEmpyProject();
+        console.log(emptyProject);
+        this.setState({
+            isFormView: true,
+            selectedProject: emptyProject
+        })
+    }
+
+    submitProjectForm(project) {
+        let callback = (data) => {
+            this.setState({
+                projects: this.state.projects.concat(data),
+                selectedProject: data,
+                isFormView: false
+            });
+        };
+
+        HttpCall.post(BaseURL.base, callback, project);
+    }
+
+    cancelProjectForm() {
+        this.setState({
+            selectedProject: null,
+            isFormView: false
+        })
     }
 
     /**
@@ -63,6 +104,24 @@ class App extends Component {
         const url = BaseURL.singleProject.replace("{1}", project.id);
 
         HttpCall.put(url, callback, project);
+    }
+
+    deleteProject(project) {
+        let callback = () => {
+            let index = this.state.projects.findIndex(p => project.id === p.id);
+            let allProjects = this.state.projects.slice();
+            allProjects.splice(index, 1);
+            console.log(allProjects);
+
+            this.setState({
+                selectedProject: null,
+                projects: allProjects
+            });
+        };
+
+        const url = BaseURL.singleProject.replace("{1}", project.id);
+
+        HttpCall.delete(url, callback);
     }
 
     render() {
@@ -88,7 +147,13 @@ class App extends Component {
                             </button>
                         </div>
                         <div className="col-sm-9">
-                            <ProjectView project={this.state.selectedProject} updateProject={this.updateProject} />
+                            <ProjectDetails project={this.state.selectedProject}
+                                            updateProject={this.updateProject}
+                                            isFormView={this.state.isFormView}
+                                            submitForm={this.submitProjectForm}
+                                            cancelForm={this.cancelProjectForm}
+                                            deleteProject={this.deleteProject}
+                            />
                         </div>
                     </div>
                 </div>
