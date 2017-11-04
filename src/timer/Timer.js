@@ -4,12 +4,13 @@
 
 import React, {Component} from 'react';
 
+/**
+ * Handle project time.
+ */
 class Timer extends Component {
 
     constructor(props){
         super(props);
-
-        console.log(typeof this.props.handleIsTimerRunning);
 
         this.state = {
             seconds: 0,
@@ -24,7 +25,6 @@ class Timer extends Component {
     startTimer(event){
         this.timer = setInterval(this.tick, 1000);
         this.setState({isRunning: true});
-        this.props.handleIsTimerRunning(true);
     }
 
     stopTimer(event) {
@@ -37,7 +37,6 @@ class Timer extends Component {
                 isRunning: false
             });
         }
-        this.props.handleIsTimerRunning(false);
     }
 
     tick() {

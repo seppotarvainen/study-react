@@ -3,19 +3,12 @@ import './App.css';
 import ProjectView from './project/ProjectView';
 import ProjectList from './project/ProjectList';
 import HttpCall from './utils/HttpCall';
+import BaseURL from './utils/BaseURL';
 import 'bootstrap/dist/css/bootstrap.css';
 
-const BASE_URL = "http://localhost:8080/projects";
-// const BASE_URL = "http://thesis-project-backend.eu-central-1.elasticbeanstalk.com:8080/projects";
-
-const urls = {
-    base: BASE_URL,
-    singleProject: BASE_URL + "/{1}",
-    singleProjectChecklist: BASE_URL + "/{1}/checklist-items",
-    singleProjectChecklistItem: BASE_URL + "/{1}/checklist-items/{2}"
-};
-
-
+/**
+ * Parent component. Controls the list of projects.
+ */
 class App extends Component {
 
     constructor(props) {
@@ -27,11 +20,12 @@ class App extends Component {
         };
 
         this.setSelectedProject = this.setSelectedProject.bind(this);
+        this.updateProject = this.updateProject.bind(this);
     }
 
     componentDidMount() {
         // load projects
-        this.projects = HttpCall.get(urls.base, (projects) => {
+        this.projects = HttpCall.get(BaseURL.base, (projects) => {
             console.log(projects);
             this.setState({
                 projects: projects
@@ -50,6 +44,25 @@ class App extends Component {
 
     setProjectFormAdd() {
         console.log("Add!");
+    }
+
+    /**
+     * Update project
+     * @param project - Project object
+     */
+    updateProject(project) {
+        let callback = (updtedProject) => {
+            let index = this.state.projects.findIndex(p => p.id === updtedProject.id);
+            let allProjects = this.state.projects.slice(0);
+            allProjects[index] = updtedProject;
+            this.setState({
+                projects: allProjects
+            })
+        };
+
+        const url = BaseURL.singleProject.replace("{1}", project.id);
+
+        HttpCall.put(url, callback, project);
     }
 
     render() {
@@ -71,11 +84,11 @@ class App extends Component {
                             <ProjectList projects={this.state.projects} handleSelect={this.setSelectedProject} selectedProject={this.state.selectedProject} />
                             <br />
                             <button className="btn btn-default" onClick={this.setProjectFormAdd}>
-                                <span className="glyphicon glyphicon-plus" aria-hidden="true"></span> Add project
+                                <span className="glyphicon glyphicon-plus" aria-hidden="true" /> Add project
                             </button>
                         </div>
                         <div className="col-sm-9">
-                            <ProjectView project={this.state.selectedProject} />
+                            <ProjectView project={this.state.selectedProject} updateProject={this.updateProject} />
                         </div>
                     </div>
                 </div>
